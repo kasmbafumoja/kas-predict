@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kas Universe Predictor</title>
-
 <style>
-/* --- Fond multicolor animé --- */
+/* --- Reset et base --- */
+* { margin:0; padding:0; box-sizing:border-box; }
+body, html { height:100%; width:100%; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow:hidden; }
+
+/* --- Arrière-plan multicolor cosmos 3D --- */
 body {
-  margin:0;
-  height:100vh;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(270deg,#ff0080,#7928ca,#00c3ff,#ffcc00);
-  background-size: 800% 800%;
-  animation: gradientBG 15s ease infinite;
-  color: #fff;
-  overflow: hidden;
+  background: linear-gradient(45deg, #ff0080, #7928ca, #00c3ff, #ffcc00);
+  background-size: 400% 400%;
+  animation: gradientBG 20s ease infinite;
   display:flex;
   justify-content:center;
   align-items:center;
+  perspective:1000px;
+  color:white;
 }
 @keyframes gradientBG {
   0%{background-position:0% 50%;}
@@ -26,55 +26,85 @@ body {
   100%{background-position:0% 50%;}
 }
 
-/* --- Texte animé en arrière-plan --- */
-@keyframes floatText { 0%{transform:translateY(100%);}100%{transform:translateY(-100%);} }
+/* --- Texte flottant arrière-plan 3D --- */
 #bg-text {
-  position: absolute;
-  width: 100%;
+  position:absolute;
+  width:100%;
   text-align:center;
-  font-size:3em;
+  font-size:4em;
   font-weight:bold;
-  color: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.05);
   white-space:nowrap;
   animation: floatText 25s linear infinite;
+  transform: rotateX(10deg) rotateY(15deg);
+}
+@keyframes floatText {
+  0% {transform: translateY(120%) rotateX(10deg) rotateY(15deg);}
+  100% {transform: translateY(-120%) rotateX(10deg) rotateY(15deg);}
 }
 
-/* --- Card principale --- */
+/* --- Carte principale responsive --- */
 .card {
   position: relative;
-  background: rgba(0,0,0,0.8);
-  padding:30px 25px;
+  background: rgba(0,0,0,0.85);
+  padding: 35px 30px;
   border-radius:25px;
-  width:360px;
+  width: 90%;
+  max-width: 480px;
   text-align:center;
-  box-shadow:0 0 30px #7c3aed;
+  box-shadow:0 0 50px #7c3aed;
   z-index:1;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.card:hover { transform:translateY(-5px); box-shadow:0 0 50px #ff0080; }
+.card:hover { transform: translateY(-8px) rotateX(1deg); box-shadow:0 0 70px #ff0080; }
 
-/* --- Inputs & Buttons --- */
-input { width:100%; padding:12px; margin:12px 0; border-radius:12px; border:none; outline:none; font-size:14px;}
-button { width:100%; padding:12px; border-radius:12px; border:none; font-weight:bold; background:linear-gradient(45deg,#ff0080,#7928ca); color:#fff; cursor:pointer; transition:0.2s; }
-button:hover{ transform:scale(1.05); box-shadow:0 0 20px #ff0080;}
+/* --- Input et bouton --- */
+input {
+  width:100%;
+  padding:14px;
+  margin:14px 0;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  font-size:16px;
+}
+button {
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-weight:bold;
+  background:linear-gradient(45deg,#ff0080,#7928ca);
+  color:#fff;
+  cursor:pointer;
+  transition:0.2s;
+  font-size:16px;
+}
+button:hover { transform:scale(1.05); box-shadow:0 0 25px #ff0080; }
 
-/* --- Result --- */
-.result { margin-top:15px; font-size:14px; text-align:left; line-height:1.5; opacity:0; animation:fadeIn 0.8s forwards;}
+/* --- Resultats --- */
+.result {
+  margin-top:18px;
+  font-size:15px;
+  text-align:left;
+  line-height:1.6;
+  opacity:0;
+  animation:fadeIn 0.8s forwards;
+}
 @keyframes fadeIn { to{opacity:1;} }
 
-/* --- Footer --- */
-.footer{ margin-top:12px; font-size:12px; color:#ccc; text-align:center; font-style:italic;}
+/* --- Footer Kas Universe --- */
+.footer{ margin-top:15px; font-size:12px; color:#ccc; text-align:center; font-style:italic; }
 
-/* --- Petit bouton WhatsApp discret en bas --- */
+/* --- Boutons WhatsApp discret --- */
 .whatsapp-footer {
   position: fixed;
   bottom:15px;
   right:15px;
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:8px;
   font-size:14px;
-  text-align:right;
   z-index:10;
 }
 .whatsapp-footer a{
@@ -82,22 +112,23 @@ button:hover{ transform:scale(1.05); box-shadow:0 0 20px #ff0080;}
   align-items:center;
   gap:6px;
   text-decoration:none;
-  padding:6px 10px;
-  border-radius:12px;
+  padding:8px 12px;
+  border-radius:14px;
   font-weight:bold;
   background:#25D366;
   color:#fff;
+  font-size:14px;
   transition:0.3s;
 }
-.whatsapp-footer a:hover{
-  background:#1ebe57;
-}
+.whatsapp-footer a:hover{ background:#1ebe57; }
+
+/* --- Responsive texte flottant --- */
+@media(max-width:480px){ #bg-text{font-size:2.5em;} .card{padding:25px 20px;} }
 </style>
 </head>
 
 <body>
-
-<!-- Texte animé en arrière-plan -->
+<!-- Texte flottant 3D en arrière-plan -->
 <div id="bg-text">🌌 KAS UNIVERSE 🌌 | TERMUX-MD | LE MAÎTRE DU CYBER 🌌</div>
 
 <!-- Carte principale -->
@@ -113,10 +144,10 @@ button:hover{ transform:scale(1.05); box-shadow:0 0 20px #ff0080;}
   <div class="footer">Powered by TERMUX-MD Tech</div>
 </div>
 
-<!-- Petit touch WhatsApp discret -->
+<!-- Petit footer WhatsApp discret -->
 <div class="whatsapp-footer">
   <a href="https://wa.me/243994158410" target="_blank">👨‍💻 Créateur</a>
-  <a href="https://chat.whatsapp.com/LFH4eyfVymkJriNFUwas4o" target="_blank">🌐 Groupe VPN & Stratégies</a>
+  <a href="https://chat.whatsapp.com/LFH4eyfVymkJriNFUwas4o" target="_blank">🌐 Groupe VPN</a>
 </div>
 
 <script>
