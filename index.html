@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kas Universe Predictor</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #000, #3b0764);
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      border-radius: 15px;
+      width: 320px;
+      box-shadow: 0 0 20px purple;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    button {
+      background: purple;
+      color: white;
+      font-weight: bold;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🌌 Kas Universe</h2>
+  <p>AI Match Predictor</p>
+
+  <input id="match" placeholder="Ex: Real Madrid vs Barcelona">
+
+  <button onclick="analyze()">Analyser</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+async function analyze() {
+  const match = document.getElementById("match").value;
+  const resultBox = document.getElementById("result");
+
+  resultBox.innerHTML = "Analyse en cours...";
+
+  const res = await fetch("/api/predict", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ match })
+  });
+
+  const data = await res.json();
+
+  if (data.error) {
+    resultBox.innerHTML = "Erreur : " + data.error;
+    return;
+  }
+
+  resultBox.innerHTML = `
+    <b>${data.match}</b><br><br>
+    V1 : ${data.V1}%<br>
+    X : ${data.X}%<br>
+    V2 : ${data.V2}%<br>
+    Over 2.5 : ${data.over25}%<br><br>
+    🧠 ${data.explanation}
+  `;
+}
+</script>
+
+</body>
+</html>
