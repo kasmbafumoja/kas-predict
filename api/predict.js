@@ -1,6 +1,9 @@
+import fetch from "node-fetch";
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
+const RAPIDAPI_HOST = "football536.p.rapidapi.com"; // Exemple d'API football sur RapidAPI
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -11,63 +14,76 @@ export default async function handler(req, res) {
   if (!match) return res.status(400).json({ error: "Nom du match requis" });
 
   try {
-    // Prompt pour l'IA
+    // --- Étape 1 : Vérifier le match via RapidAPI ---
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const dates = [today.toISOString().split("T")[0], tomorrow.toISOString().split("T")[0]];
+
+    let foundMatch = null;
+
+    for (const date of dates) {
+      const url = `https://${RAPIDAPI_HOST}/fixtures?date=${date}`;
+      const response = await fetch(url, { 
+        method: "GET", 
+        headers: { 
+          "X-RapidAPI-Key": RAPIDAPI_KEY,
+          "X-RapidAPI-Host": RAPIDAPI_HOST
+        }
+      });
+      const data = await response.json();
+      
+      // Chercher le match exact
+      const parts = match.split("vs").map(s => s.trim().toLowerCase());
+      const matchData = data.response.find(f => 
+        f.teams.home.name.toLowerCase().includes(parts[0]) &&
+        f.teams.away.name.toLowerCase().includes(parts[1])
+      );
+      if (matchData) {
+        foundMatch = matchData;
+        break;
+      }
+    }
+
+    if (!foundMatch) return res.status(404).json({ error: "Match introuvable aujourd'hui ou demain" });
+
+    const status = foundMatch.fixture.status.short === "LIVE" ? "En direct" : "À venir";
+    const matchDate = foundMatch.fixture.date.split("T")[0];
+    const matchTime = foundMatch.fixture.date.split("T")[1].slice(0,5);
+
+    // --- Étape 2 : Appel à l'IA pour prédiction ---
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       temperature: 0.25,
       messages: [
-        {
-          role: "system",
-          content: `
-Tu es un expert analyste football.
-Ne prédis que les matchs joués aujourd'hui ou demain.
-Si le match n'existe pas ou est hors délai, retourne JSON avec "error".
-Si le match est en direct, indique "status":"En direct".
+        { role: "system", content: `
+Tu es un expert analyste football. Ne prédis que les matchs valides.
 Fournis :
 - Probabilité V1/X/V2 réaliste
 - Over 2.5
 - 4 scores exacts les plus probables
-- Événements clés (BTTS, moments probables, joueurs à surveiller)
-- Date et heure du match
-Réponds uniquement en JSON.
-`
-        },
-        {
-          role: "user",
-          content: `
+- Événements clés
+Réponds uniquement en JSON avec les champs :
+V1,X,V2,over25,score_probables,date,time,status,key_events,explanation,error
+`},
+        { role: "user", content: `
 Analyse ce match : ${match}
-Réponds en JSON avec la structure suivante :
-{
-  "V1": number,
-  "X": number,
-  "V2": number,
-  "over25": number,
-  "score_probables": ["0-1","1-1","2-1","1-2"],
-  "date": "YYYY-MM-DD",
-  "time": "HH:MM",
-  "status": "À venir / En direct",
-  "key_events": ["BTTS probable","Plus de 2.5 buts","Corner important","Joueur à surveiller"],
-  "explanation": "",
-  "error": ""
-}
-`
-        }
+Date: ${matchDate}, Heure: ${matchTime}, Status: ${status}
+` }
       ]
     });
 
-    const text = completion.choices[0].message.content.trim();
-
-    // Essayer de parser JSON renvoyé par l'IA
-    let data;
+    let prediction;
     try {
-      data = JSON.parse(text);
-    } catch (err) {
-      return res.status(500).json({ error: "Erreur IA, JSON invalide", details: text });
+      prediction = JSON.parse(completion.choices[0].message.content.trim());
+    } catch(e) {
+      return res.status(500).json({ error: "Erreur IA, JSON invalide", details: completion.choices[0].message.content });
     }
 
-    res.status(200).json({ match, ...data });
+    // --- Étape 3 : Retour JSON clair ---
+    res.status(200).json({ match, ...prediction, date: matchDate, time: matchTime, status });
 
-  } catch (error) {
-    res.status(500).json({ error: "Erreur serveur / IA", details: error.message });
+  } catch (err) {
+    res.status(500).json({ error: "Erreur serveur", details: err.message });
   }
 }
