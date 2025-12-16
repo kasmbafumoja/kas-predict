@@ -39,7 +39,7 @@ body {
   animation: floatText 25s linear infinite;
 }
 
-/* --- Card --- */
+/* --- Card principale --- */
 .card {
   position: relative;
   background: rgba(0,0,0,0.8);
@@ -65,14 +65,38 @@ button:hover{ transform:scale(1.05); box-shadow:0 0 20px #ff0080;}
 /* --- Footer --- */
 .footer{ margin-top:12px; font-size:12px; color:#ccc; text-align:center; font-style:italic;}
 
-/* --- WhatsApp buttons --- */
-.whatsapp, .vpn { display:block; margin:8px 0; padding:10px 0; border-radius:12px; text-decoration:none; font-weight:bold; color:#fff; transition:0.3s; }
-.whatsapp{background:#25D366;} .whatsapp:hover{background:#1ebe57;}
-.vpn{background:#0088cc;} .vpn:hover{background:#006699;}
+/* --- Petit bouton WhatsApp discret en bas --- */
+.whatsapp-footer {
+  position: fixed;
+  bottom:15px;
+  right:15px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:14px;
+  text-align:right;
+  z-index:10;
+}
+.whatsapp-footer a{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:12px;
+  font-weight:bold;
+  background:#25D366;
+  color:#fff;
+  transition:0.3s;
+}
+.whatsapp-footer a:hover{
+  background:#1ebe57;
+}
 </style>
 </head>
 
 <body>
+
 <!-- Texte animé en arrière-plan -->
 <div id="bg-text">🌌 KAS UNIVERSE 🌌 | TERMUX-MD | LE MAÎTRE DU CYBER 🌌</div>
 
@@ -86,10 +110,13 @@ button:hover{ transform:scale(1.05); box-shadow:0 0 20px #ff0080;}
 
   <div class="result" id="result"></div>
 
-  <a href="https://wa.me/243994158410" target="_blank" class="whatsapp">Contactez le créateur</a>
-  <a href="https://chat.whatsapp.com/LFH4eyfVymkJriNFUwas4o" target="_blank" class="vpn">Groupe VPN & Stratégies</a>
-
   <div class="footer">Powered by TERMUX-MD Tech</div>
+</div>
+
+<!-- Petit touch WhatsApp discret -->
+<div class="whatsapp-footer">
+  <a href="https://wa.me/243994158410" target="_blank">👨‍💻 Créateur</a>
+  <a href="https://chat.whatsapp.com/LFH4eyfVymkJriNFUwas4o" target="_blank">🌐 Groupe VPN & Stratégies</a>
 </div>
 
 <script>
