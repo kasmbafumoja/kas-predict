@@ -1,0 +1,3 @@
+// config.js
+export const OPENAI_API_KEY = "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";
+export const RAPIDAPI_KEY = "386c1333abmshea5d83fcb9f2f93p17d7f9jsn6a6d4925e747";
