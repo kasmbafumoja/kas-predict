@@ -1,45 +1,173 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>KAS UNIVERSE ⚡ Match Predictor</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
-body{min-height:100vh;overflow-x:hidden;color:#fff;background:radial-gradient(circle at top left,#ff00cc,#3333ff,#00ffcc);animation:bgMove 10s infinite alternate;}
-@keyframes bgMove{0%{filter:hue-rotate(0deg);}100%{filter:hue-rotate(360deg);}}
-.background-text{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:8vw;font-weight:900;opacity:0.08;text-align:center;animation:float 6s ease-in-out infinite;pointer-events:none;}
-@keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-20px);}100%{transform:translateY(0);}}
-.container{max-width:900px;margin:auto;padding:40px 20px;}
-.card{background:rgba(0,0,0,0.55);backdrop-filter:blur(15px);border-radius:25px;padding:30px;box-shadow:0 20px 50px rgba(0,0,0,0.6);}
-h1{text-align:center;font-size:2.2em;margin-bottom:10px;}
-.subtitle{text-align:center;opacity:0.8;margin-bottom:30px;}
-input,button{width:100%;padding:15px;border-radius:15px;border:none;margin-top:15px;font-size:1em;}
-input{background:#111;color:#fff;}
-button{background:linear-gradient(135deg,#00ffcc,#ff00cc);color:#000;font-weight:bold;cursor:pointer;transition:transform 0.2s;}
-button:hover{transform:scale(1.05);}
-.result{margin-top:30px;animation:fadeIn 0.5s ease-in-out;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-.badge{display:inline-block;padding:8px 15px;border-radius:20px;background:rgba(255,255,255,0.15);margin:5px 5px 5px 0;}
-.footer{position:fixed;bottom:10px;width:100%;display:flex;justify-content:center;gap:20px;opacity:0.8;font-size:14px;}
-.footer a{color:#00ffcc;text-decoration:none;}
-@media(max-width:600px){h1{font-size:1.6em;}.background-text{font-size:12vw;}}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, sans-serif;
+}
+
+body{
+  min-height:100vh;
+  color:#fff;
+  background:
+    radial-gradient(circle at 15% 20%, #9b00ff, transparent 40%),
+    radial-gradient(circle at 85% 30%, #00b3ff, transparent 40%),
+    radial-gradient(circle at 50% 85%, #00ffd5, transparent 45%),
+    linear-gradient(135deg, #06060a, #0b0b18);
+  animation:hue 14s infinite alternate;
+}
+
+@keyframes hue{
+  0%{filter:hue-rotate(0deg)}
+  100%{filter:hue-rotate(360deg)}
+}
+
+.background-text{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:9vw;
+  font-weight:900;
+  opacity:0.07;
+  pointer-events:none;
+  animation:float 6s infinite ease-in-out;
+  text-shadow:0 0 30px #9b00ff,0 0 60px #00b3ff;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-25px)}
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+.card{
+  background:rgba(10,10,25,.65);
+  backdrop-filter:blur(18px);
+  border-radius:28px;
+  padding:30px;
+  box-shadow:
+    0 0 40px rgba(155,0,255,.4),
+    0 0 90px rgba(0,179,255,.25);
+}
+
+h1{
+  text-align:center;
+  margin-bottom:8px;
+  font-size:2.2em;
+}
+
+.subtitle{
+  text-align:center;
+  opacity:.8;
+  margin-bottom:30px;
+}
+
+input,button{
+  width:100%;
+  padding:15px;
+  border-radius:16px;
+  border:none;
+  margin-top:15px;
+  font-size:1em;
+}
+
+input{
+  background:#111;
+  color:#fff;
+}
+
+button{
+  background:linear-gradient(135deg,#00ffd5,#9b00ff,#ff2aa1);
+  color:#000;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 0 25px rgba(0,255,213,.8);
+  transition:.25s;
+}
+
+button:hover{
+  transform:scale(1.06);
+  box-shadow:0 0 40px rgba(255,42,161,.9);
+}
+
+.result{
+  margin-top:30px;
+  animation:fade .5s ease-in-out;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 15px;
+  border-radius:20px;
+  background:rgba(255,255,255,.15);
+  margin:5px 5px 5px 0;
+  font-size:14px;
+}
+
+hr{
+  border:none;
+  height:1px;
+  background:linear-gradient(to right,transparent,#00ffd5,transparent);
+  margin:18px 0;
+}
+
+.footer{
+  position:fixed;
+  bottom:10px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  font-size:13px;
+  opacity:.85;
+}
+
+.footer a{
+  color:#00ffd5;
+  text-decoration:none;
+}
+
+@media(max-width:600px){
+  h1{font-size:1.6em}
+  .background-text{font-size:13vw}
+}
 </style>
 </head>
 
 <body>
 
 <div class="background-text">
-  TERMUX MD<br>KAS UNIVERSE<br>MAÎTRE DU CYBER
+  TERMUX MD<br>
+  KAS UNIVERSE<br>
+  MAÎTRE DU CYBER
 </div>
 
 <div class="container">
   <div class="card">
     <h1>⚽ KAS UNIVERSE PREDICTOR</h1>
-    <p class="subtitle">Analyse intelligente des matchs réels</p>
+    <p class="subtitle">Assistant intelligent de paris sportifs</p>
 
-    <input id="match" placeholder="Ex: Cardiff vs Swansea">
+    <input id="match" placeholder="Ex: Arsenal vs Chelsea" />
     <button onclick="predict()">🔮 Analyser le match</button>
 
     <div id="output" class="result"></div>
@@ -53,7 +181,7 @@ button:hover{transform:scale(1.05);}
 
 <script>
 async function predict(){
-  const match=document.getElementById("match").value;
+  const match=document.getElementById("match").value.trim();
   const output=document.getElementById("output");
   output.innerHTML="⏳ Analyse en cours...";
 
@@ -63,19 +191,39 @@ async function predict(){
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({match})
     });
+
     const data=await res.json();
-    if(!data.success){output.innerHTML="❌ "+(data.error||"Erreur inconnue");return;}
+
+    if(!data.success){
+      output.innerHTML="❌ "+(data.error||"Match non confirmé");
+      return;
+    }
+
     const p=data.prediction;
+
     output.innerHTML=`
       <div class="badge">V1 : ${p.V1}</div>
       <div class="badge">X : ${p.X}</div>
       <div class="badge">V2 : ${p.V2}</div>
       <div class="badge">Over 2.5 : ${p.over25}</div>
-      <h3>🎯 Scores probables</h3><p>${p.scores_probables.join(" • ")}</p>
-      <h3>⚡ Événements fréquents</h3><p>${p.evenements_frequents.join(" • ")}</p>
+      <div class="badge">BTTS Oui : ${p.btts_oui}</div>
+      <div class="badge">BTTS Non : ${p.btts_non}</div>
+      <div class="badge">Corners : ${p.corners}</div>
+
+      <h3>🎯 Scores probables</h3>
+      <p>${p.scores_probables.join(" • ")}</p>
+
       <h3>🔐 Confiance : ${p.confiance}</h3>
+
+      <hr>
+
+      <p style="font-size:14px;opacity:.8">
+        ⚠️ ${p.conseil}
+      </p>
     `;
-  }catch(e){output.innerHTML="❌ Erreur serveur";}
+  }catch(e){
+    output.innerHTML="❌ Erreur serveur";
+  }
 }
 </script>
 
