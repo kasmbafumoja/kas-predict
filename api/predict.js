@@ -12,51 +12,51 @@ export default async function handler(req, res) {
 
     const { match } = req.body || {};
 
-    if (!match || !match.toLowerCase().includes("vs")) {
-      return res.status(400).json({
-        error: "Format invalide. Exemple : Arsenal vs Chelsea"
-      });
+    if (!match) {
+      return res.status(400).json({ error: "Match manquant" });
     }
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
-      temperature: 0.2,
+      temperature: 0.25,
       messages: [
         {
           role: "system",
           content: `
-Tu es un ASSISTANT DE PARI FOOTBALL PROFESSIONNEL.
+Tu es un ASSISTANT DE PARI FOOTBALL EXPERT.
 
-RÈGLES STRICTES (OBLIGATOIRES) :
-1. Si l'un des deux clubs n'est PAS un club réel → REFUSE
-2. Si le match n'est PAS très probable aujourd'hui ou demain → REFUSE
-3. Si tu n'es PAS sûr à au moins 70% que le match existe → REFUSE
-4. Ne JAMAIS inventer de match
-5. Si tu refuses, retourne exactement :
+MISSIONS :
+1. Corrige les fautes de noms d’équipes (ex: Man Utd → Manchester United)
+2. Si le match est incertain, propose le plus probable
+3. Si plusieurs matchs possibles → choisis le plus logique aujourd’hui/demain
+4. N’invente JAMAIS de clubs
+5. Toujours prévenir si la détection n’est pas certaine
 
-{ "refuse": true, "raison": "Match non confirmé ou inexistant" }
-
-SI le match est valide :
-Retourne STRICTEMENT ce JSON :
+RETOURNE STRICTEMENT CE JSON :
 
 {
-  "refuse": false,
-  "V1": "xx%",
-  "X": "xx%",
-  "V2": "xx%",
-  "over25": "xx%",
-  "btts_oui": "xx%",
-  "btts_non": "xx%",
-  "corners": "+8.5 | +9.5 | +10.5",
-  "scores_probables": ["1-0","2-1","1-1","2-0"],
-  "conseil": "N.B : texte court de conseil de pari responsable",
-  "confiance": "faible | moyenne | élevée"
+ "match_corrige": "Equipe A vs Equipe B",
+ "niveau_certitude": "faible | moyen | élevé",
+ "V1": "xx%",
+ "X": "xx%",
+ "V2": "xx%",
+ "over25": "xx%",
+ "btts_oui": "xx%",
+ "btts_non": "xx%",
+ "corners": "+8.5 | +9.5 | +10.5",
+ "scores_probables": ["1-0","2-1","1-1","2-0"],
+ "vip_pari": {
+   "selection": "BTTS Oui | Over 1.5 | Double chance",
+   "raison": "Pourquoi ce pari est le plus sécurisé"
+ },
+ "conseil": "N.B : message de prudence",
+ "confiance": "faible | moyenne | élevée"
 }
 `
         },
         {
           role: "user",
-          content: `Match à analyser : ${match}`
+          content: `Analyse ce match (même s'il est mal écrit) : ${match}`
         }
       ]
     });
@@ -73,17 +73,9 @@ Retourne STRICTEMENT ce JSON :
       });
     }
 
-    // Si l'IA refuse le match
-    if (data.refuse) {
-      return res.status(200).json({
-        success: false,
-        error: data.raison
-      });
-    }
-
     return res.status(200).json({
       success: true,
-      match,
+      original: match,
       prediction: data
     });
 
