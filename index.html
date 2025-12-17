@@ -3,177 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kas Universe Predictor</title>
+<title>KAS UNIVERSE ⚡ Match Predictor</title>
+
 <style>
-/* --- Reset et base --- */
-* { margin:0; padding:0; box-sizing:border-box; }
-body, html { height:100%; width:100%; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow:hidden; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
 
-/* --- Arrière-plan multicolor cosmos 3D --- */
 body {
-  background: linear-gradient(45deg, #ff0080, #7928ca, #00c3ff, #ffcc00);
-  background-size: 400% 400%;
-  animation: gradientBG 20s ease infinite;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  perspective:1000px;
-  color:white;
-}
-@keyframes gradientBG {
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #fff;
+  background: radial-gradient(circle at top left, #ff00cc, #3333ff, #00ffcc);
+  animation: bgMove 10s infinite alternate;
 }
 
-/* --- Texte flottant arrière-plan 3D --- */
-#bg-text {
-  position:absolute;
-  width:100%;
-  text-align:center;
-  font-size:4em;
-  font-weight:bold;
-  color: rgba(255,255,255,0.05);
-  white-space:nowrap;
-  animation: floatText 25s linear infinite;
-  transform: rotateX(10deg) rotateY(15deg);
-}
-@keyframes floatText {
-  0% {transform: translateY(120%) rotateX(10deg) rotateY(15deg);}
-  100% {transform: translateY(-120%) rotateX(10deg) rotateY(15deg);}
+@keyframes bgMove {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
 }
 
-/* --- Carte principale responsive --- */
-.card {
-  position: relative;
-  background: rgba(0,0,0,0.85);
-  padding: 35px 30px;
-  border-radius:25px;
-  width: 90%;
-  max-width: 480px;
-  text-align:center;
-  box-shadow:0 0 50px #7c3aed;
-  z-index:1;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card:hover { transform: translateY(-8px) rotateX(1deg); box-shadow:0 0 70px #ff0080; }
-
-/* --- Input et bouton --- */
-input {
-  width:100%;
-  padding:14px;
-  margin:14px 0;
-  border-radius:12px;
-  border:none;
-  outline:none;
-  font-size:16px;
-}
-button {
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  font-weight:bold;
-  background:linear-gradient(45deg,#ff0080,#7928ca);
-  color:#fff;
-  cursor:pointer;
-  transition:0.2s;
-  font-size:16px;
-}
-button:hover { transform:scale(1.05); box-shadow:0 0 25px #ff0080; }
-
-/* --- Resultats --- */
-.result {
-  margin-top:18px;
-  font-size:15px;
-  text-align:left;
-  line-height:1.6;
-  opacity:0;
-  animation:fadeIn 0.8s forwards;
-}
-@keyframes fadeIn { to{opacity:1;} }
-
-/* --- Footer Kas Universe --- */
-.footer{ margin-top:15px; font-size:12px; color:#ccc; text-align:center; font-style:italic; }
-
-/* --- Boutons WhatsApp discret --- */
-.whatsapp-footer {
+.background-text {
   position: fixed;
-  bottom:15px;
-  right:15px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  font-size:14px;
-  z-index:10;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8vw;
+  font-weight: 900;
+  opacity: 0.08;
+  text-align: center;
+  animation: float 6s ease-in-out infinite;
+  pointer-events: none;
 }
-.whatsapp-footer a{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  text-decoration:none;
-  padding:8px 12px;
-  border-radius:14px;
-  font-weight:bold;
-  background:#25D366;
-  color:#fff;
-  font-size:14px;
-  transition:0.3s;
-}
-.whatsapp-footer a:hover{ background:#1ebe57; }
 
-/* --- Responsive texte flottant --- */
-@media(max-width:480px){ #bg-text{font-size:2.5em;} .card{padding:25px 20px;} }
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0); }
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+.card {
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+  padding: 30px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+input, button {
+  width: 100%;
+  padding: 15px;
+  border-radius: 15px;
+  border: none;
+  margin-top: 15px;
+  font-size: 1em;
+}
+
+input {
+  background: #111;
+  color: #fff;
+}
+
+button {
+  background: linear-gradient(135deg, #00ffcc, #ff00cc);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.result {
+  margin-top: 30px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 15px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.15);
+  margin: 5px 5px 5px 0;
+}
+
+.footer {
+  position: fixed;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.footer a {
+  color: #00ffcc;
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.6em; }
+  .background-text { font-size: 12vw; }
+}
 </style>
 </head>
 
 <body>
-<!-- Texte flottant 3D en arrière-plan -->
-<div id="bg-text">🌌 KAS UNIVERSE 🌌 | TERMUX-MD | LE MAÎTRE DU CYBER 🌌</div>
 
-<!-- Carte principale -->
-<div class="card">
-  <h2>🌌 KAS UNIVERSE</h2>
-  <p>AI Match Predictor</p>
-
-  <input id="match" placeholder="Ex: Real Madrid vs Barcelona" />
-  <button onclick="analyze()">Analyser le match</button>
-
-  <div class="result" id="result"></div>
-
-  <div class="footer">Powered by TERMUX-MD Tech</div>
+<div class="background-text">
+  TERMUX MD<br>KAS UNIVERSE<br>MAÎTRE DU CYBER
 </div>
 
-<!-- Petit footer WhatsApp discret -->
-<div class="whatsapp-footer">
-  <a href="https://wa.me/243994158410" target="_blank">👨‍💻 Créateur</a>
-  <a href="https://chat.whatsapp.com/LFH4eyfVymkJriNFUwas4o" target="_blank">🌐 Groupe VPN</a>
+<div class="container">
+  <div class="card">
+    <h1>⚽ KAS UNIVERSE PREDICTOR</h1>
+    <p class="subtitle">Analyse intelligente des matchs réels</p>
+
+    <input id="match" placeholder="Ex: Cardiff vs Swansea">
+    <button onclick="predict()">🔮 Analyser le match</button>
+
+    <div id="output" class="result"></div>
+  </div>
+</div>
+
+<div class="footer">
+  <a href="https://wa.me/243994158410" target="_blank">💬 Créateur</a>
+  <a href="https://chat.whatsapp.com/LFH4eyfVymkJriNFUwas4o" target="_blank">🟢 Groupe</a>
 </div>
 
 <script>
-async function analyze(){
-  const match=document.getElementById("match").value;
-  const result=document.getElementById("result");
-  if(!match){ result.innerHTML="⚠️ Entrez un match."; return; }
-  result.innerHTML="Analyse en cours...";
-  try{
-    const res=await fetch("/api/predict",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({match})});
-    const data=await res.json();
-    if(data.error && data.error!==""){ result.innerHTML="❌ "+data.error; return; }
+async function predict() {
+  const match = document.getElementById("match").value;
+  const output = document.getElementById("output");
+  output.innerHTML = "⏳ Analyse en cours...";
 
-    result.innerHTML=`
-<b>${data.match}</b><br>
-Statut: ${data.status}<br>
-Date: ${data.date} ${data.time}<br><br>
-🏠 V1: ${data.V1}%<br>
-🤝 X: ${data.X}%<br>
-✈️ V2: ${data.V2}%<br>
-⚽ Over 2.5: ${data.over25}%<br><br>
-🎯 Scores probables: ${data.score_probables.join(", ")}<br>
-🧠 Événements clés: ${data.key_events.join(", ")}<br><br>
-📌 ${data.explanation}
-`;
-  }catch(e){ result.innerHTML="❌ Erreur de connexion."; }
+  try {
+    const res = await fetch("/api/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ match })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      output.innerHTML = "❌ " + (data.error || "Erreur inconnue");
+      return;
+    }
+
+    const p = data.prediction;
+
+    output.innerHTML = `
+      <div class="badge">V1 : ${p.V1}</div>
+      <div class="badge">X : ${p.X}</div>
+      <div class="badge">V2 : ${p.V2}</div>
+      <div class="badge">Over 2.5 : ${p.over25}</div>
+      <h3>🎯 Scores probables</h3>
+      <p>${p.scores_probables.join(" • ")}</p>
+      <h3>⚡ Événements fréquents</h3>
+      <p>${p.evenements_frequents.join(" • ")}</p>
+      <h3>🔐 Confiance : ${p.confiance}</h3>
+    `;
+  } catch (e) {
+    output.innerHTML = "❌ Erreur serveur";
+  }
 }
 </script>
 
