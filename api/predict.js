@@ -1,7 +1,16 @@
+
+
+
+
+
+
+
+
+
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  apiKey: "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"
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 export default async function handler(req, res) {
@@ -10,8 +19,7 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Only POST allowed" });
     }
 
-    const body = req.body || {};
-    const match = body.match;
+    const { match } = req.body || {};
 
     if (!match || !match.toLowerCase().includes("vs")) {
       return res.status(400).json({
@@ -27,9 +35,9 @@ export default async function handler(req, res) {
           role: "system",
           content: `
 Tu es un expert football.
-Si le match n'existe pas ou n'est pas aujourd'hui/demain → refuse.
-Sinon retourne STRICTEMENT ce JSON :
-
+ Comme expert de prédiction  de match et de probabilité  , et voir  réellement  si le match indique existe vraiment  , fait aussi de recherche  pour voir leur côtes pour bien analyse ça  , 
+Alors tu dois dire à l'utilisateur   
+ STRICTEMENT ce JSON :
 {
  "V1": "xx%",
  "X": "xx%",
