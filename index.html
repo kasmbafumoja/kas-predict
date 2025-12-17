@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KAS UNIVERSE ⚡ Match Predictor</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAS UNIVERSE ⚡ Predictor</title>
 
 <style>
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:Segoe UI, sans-serif;
+  font-family:"Segoe UI",sans-serif;
 }
 
 body{
@@ -20,7 +20,7 @@ body{
     radial-gradient(circle at 15% 20%, #9b00ff, transparent 40%),
     radial-gradient(circle at 85% 30%, #00b3ff, transparent 40%),
     radial-gradient(circle at 50% 85%, #00ffd5, transparent 45%),
-    linear-gradient(135deg, #06060a, #0b0b18);
+    linear-gradient(135deg,#05050a,#0b0b18);
   animation:hue 14s infinite alternate;
 }
 
@@ -38,7 +38,7 @@ body{
   text-align:center;
   font-size:9vw;
   font-weight:900;
-  opacity:0.07;
+  opacity:0.06;
   pointer-events:none;
   animation:float 6s infinite ease-in-out;
   text-shadow:0 0 30px #9b00ff,0 0 60px #00b3ff;
@@ -124,6 +124,10 @@ button:hover{
   font-size:14px;
 }
 
+.cert-high{color:#00ffd5}
+.cert-mid{color:#ffd700}
+.cert-low{color:#ff4d4d}
+
 hr{
   border:none;
   height:1px;
@@ -167,7 +171,7 @@ hr{
     <h1>⚽ KAS UNIVERSE PREDICTOR</h1>
     <p class="subtitle">Assistant intelligent de paris sportifs</p>
 
-    <input id="match" placeholder="Ex: Arsenal vs Chelsea" />
+    <input id="match" placeholder="Ex: man u vs chelsea">
     <button onclick="predict()">🔮 Analyser le match</button>
 
     <div id="output" class="result"></div>
@@ -183,7 +187,12 @@ hr{
 async function predict(){
   const match=document.getElementById("match").value.trim();
   const output=document.getElementById("output");
-  output.innerHTML="⏳ Analyse en cours...";
+  if(!match){
+    output.innerHTML="❌ Entrez un match";
+    return;
+  }
+
+  output.innerHTML="⏳ Analyse intelligente en cours...";
 
   try{
     const res=await fetch("/api/predict",{
@@ -195,13 +204,21 @@ async function predict(){
     const data=await res.json();
 
     if(!data.success){
-      output.innerHTML="❌ "+(data.error||"Match non confirmé");
+      output.innerHTML="❌ "+(data.error||"Analyse impossible");
       return;
     }
 
     const p=data.prediction;
 
+    const certClass =
+      p.niveau_certitude==="élevé" ? "cert-high" :
+      p.niveau_certitude==="moyen" ? "cert-mid" : "cert-low";
+
     output.innerHTML=`
+      <h3>📌 Match détecté</h3>
+      <p><strong>${p.match_corrige}</strong></p>
+      <p class="${certClass}">Certitude : ${p.niveau_certitude}</p>
+
       <div class="badge">V1 : ${p.V1}</div>
       <div class="badge">X : ${p.X}</div>
       <div class="badge">V2 : ${p.V2}</div>
@@ -213,7 +230,9 @@ async function predict(){
       <h3>🎯 Scores probables</h3>
       <p>${p.scores_probables.join(" • ")}</p>
 
-      <h3>🔐 Confiance : ${p.confiance}</h3>
+      <h3>💎 Pari VIP (sécurisé)</h3>
+      <p><strong>${p.vip_pari.selection}</strong></p>
+      <p style="opacity:.8">${p.vip_pari.raison}</p>
 
       <hr>
 
