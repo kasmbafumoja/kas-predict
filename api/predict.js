@@ -4,99 +4,66 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      success: false,
-      error: "Méthode non autorisée"
-    });
+export default async function handler(req, res){
+  if(req.method !== "POST"){
+    return res.status(405).json({success:false, error:"Méthode non autorisée"});
   }
 
   try {
-    const { match } = req.body || {};
+    const { match } = req.body;
 
-    if (!match || match.length < 5) {
-      return res.json({
-        success: false,
-        error: "Match invalide"
-      });
+    if(!match || match.length < 5){
+      return res.json({success:false, error:"Match invalide"});
     }
 
     const prompt = `
-Tu es un EXPERT MONDIAL en analyse de paris sportifs football.
+Tu es un expert mondial en paris sportifs football.
+Raisonne comme un tipster professionnel et analyse toutes les options possibles du match : "${match}".
 
-Analyse le match (même mal écrit) :
-"${match}"
+Consignes :
+- Donne uniquement les options favorables (ignore les faibles).
+- Inclue analyse globale et raisonnement IA.
+- Donne un pari sûr, un pari équilibré et un pari risqué.
+- Ajoute un conseil final.
+- Ne donne jamais de clubs inventés.
+- JSON strict obligatoire.
 
-RÈGLES STRICTES :
-- Corrige les noms d’équipes
-- N’invente JAMAIS de clubs
-- Analyse TOUS les événements possibles
-- Donne UNIQUEMENT les options LES PLUS PROBABLES
-- Ignore totalement V1 / X / V2
-- Privilégie : buts, BTTS, over/under, double chance, mi-temps, corners
-- Raisonne comme un tipster professionnel
-
-RETOURNE STRICTEMENT ce JSON valide :
-
+Réponds STRICTEMENT sous ce format JSON :
 {
   "match_corrige": "",
   "analyse_globale": "",
-  "niveau_confiance": "faible | moyen | élevé",
-  "options_favorables": [
-    {
-      "option": "",
-      "probabilite": "",
-      "raison": ""
-    }
+  "options_favorables":[
+    {"option":"","probabilite":"","raison":""}
   ],
-  "pari_le_plus_sur": {
-    "selection": "",
-    "confiance": ""
-  },
-  "pari_equilibre": {
-    "selection": "",
-    "confiance": ""
-  },
-  "pari_plus_risque": {
-    "selection": "",
-    "confiance": ""
-  },
-  "conseil_final": ""
+  "pari_le_plus_sur":{"selection":"","confiance":""},
+  "pari_equilibre":{"selection":"","confiance":""},
+  "pari_plus_risque":{"selection":"","confiance":""},
+  "conseil_final":""
 }
 `;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.35,
-      messages: [
-        { role: "system", content: "Tu es une IA experte en paris sportifs football." },
-        { role: "user", content: prompt }
+      messages:[
+        {role:"system", content:"Tu es une IA experte en paris sportifs."},
+        {role:"user", content:prompt}
       ]
     });
 
-    const raw = completion.choices[0].message.content.trim();
+    const content = completion.choices[0].message.content.trim();
 
     let prediction;
     try {
-      prediction = JSON.parse(raw);
-    } catch {
-      return res.json({
-        success: false,
-        error: "Réponse IA invalide"
-      });
+      prediction = JSON.parse(content);
+    } catch(err){
+      return res.json({success:false, error:"Réponse IA invalide", raw:content});
     }
 
-    return res.status(200).json({
-      success: true,
-      prediction
-    });
+    return res.json({success:true, prediction});
 
-  } catch (err) {
+  } catch(err){
     console.error(err);
-    return res.status(500).json({
-      success: false,
-      error: "Erreur serveur"
-    });
+    return res.status(500).json({success:false, error:"Erreur serveur", details:err.message});
   }
 }
