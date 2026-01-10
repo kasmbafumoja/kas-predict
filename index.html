@@ -6,6 +6,12 @@
 <title>KAS UNIVERSE ⚡ Predictor</title>
 
 <style>
+:root{
+  --neon:#00ffd5;
+  --violet:#9b00ff;
+  --pink:#ff2aa1;
+}
+
 *{
   margin:0;
   padding:0;
@@ -17,36 +23,10 @@ body{
   min-height:100vh;
   color:#fff;
   background:
-    radial-gradient(circle at 15% 20%, #9b00ff, transparent 40%),
+    radial-gradient(circle at 15% 20%, var(--violet), transparent 40%),
     radial-gradient(circle at 85% 30%, #00b3ff, transparent 40%),
-    radial-gradient(circle at 50% 85%, #00ffd5, transparent 45%),
+    radial-gradient(circle at 50% 85%, var(--neon), transparent 45%),
     linear-gradient(135deg,#05050a,#0b0b18);
-  animation:hue 14s infinite alternate;
-}
-
-@keyframes hue{
-  0%{filter:hue-rotate(0deg)}
-  100%{filter:hue-rotate(360deg)}
-}
-
-.background-text{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:9vw;
-  font-weight:900;
-  opacity:0.06;
-  pointer-events:none;
-  animation:float 6s infinite ease-in-out;
-  text-shadow:0 0 30px #9b00ff,0 0 60px #00b3ff;
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-25px)}
 }
 
 .container{
@@ -56,25 +36,22 @@ body{
 }
 
 .card{
-  background:rgba(10,10,25,.65);
-  backdrop-filter:blur(18px);
+  background:rgba(10,10,25,.7);
+  backdrop-filter:blur(20px);
   border-radius:28px;
   padding:30px;
-  box-shadow:
-    0 0 40px rgba(155,0,255,.4),
-    0 0 90px rgba(0,179,255,.25);
+  box-shadow:0 0 80px rgba(0,255,213,.3);
 }
 
 h1{
   text-align:center;
-  margin-bottom:8px;
-  font-size:2.2em;
+  margin-bottom:6px;
 }
 
 .subtitle{
   text-align:center;
   opacity:.8;
-  margin-bottom:30px;
+  margin-bottom:25px;
 }
 
 input,button{
@@ -92,156 +69,163 @@ input{
 }
 
 button{
-  background:linear-gradient(135deg,#00ffd5,#9b00ff,#ff2aa1);
-  color:#000;
+  background:linear-gradient(135deg,var(--neon),var(--violet),var(--pink));
   font-weight:900;
   cursor:pointer;
-  box-shadow:0 0 25px rgba(0,255,213,.8);
-  transition:.25s;
 }
 
-button:hover{
-  transform:scale(1.06);
-  box-shadow:0 0 40px rgba(255,42,161,.9);
+button:disabled{
+  opacity:.6;
 }
 
 .result{
   margin-top:30px;
-  animation:fade .5s ease-in-out;
+  animation:fade .4s ease;
 }
 
 @keyframes fade{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
+  from{opacity:0;transform:translateY(15px)}
+}
+
+.section{
+  margin-top:22px;
 }
 
 .badge{
   display:inline-block;
   padding:8px 15px;
   border-radius:20px;
-  background:rgba(255,255,255,.15);
-  margin:5px 5px 5px 0;
+  background:rgba(255,255,255,.12);
+  margin:6px 6px 0 0;
   font-size:14px;
 }
 
-.cert-high{color:#00ffd5}
-.cert-mid{color:#ffd700}
-.cert-low{color:#ff4d4d}
+.safe{color:#00ffd5}
+.mid{color:#ffd700}
+.risk{color:#ff4d4d}
 
-hr{
-  border:none;
-  height:1px;
-  background:linear-gradient(to right,transparent,#00ffd5,transparent);
-  margin:18px 0;
+.loader{
+  text-align:center;
+  margin-top:25px;
+}
+
+.spinner{
+  width:38px;
+  height:38px;
+  border:4px solid rgba(255,255,255,.2);
+  border-top-color:var(--neon);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
 }
 
 .footer{
-  position:fixed;
-  bottom:10px;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:25px;
+  margin-top:40px;
+  text-align:center;
+  opacity:.8;
   font-size:13px;
-  opacity:.85;
-}
-
-.footer a{
-  color:#00ffd5;
-  text-decoration:none;
-}
-
-@media(max-width:600px){
-  h1{font-size:1.6em}
-  .background-text{font-size:13vw}
 }
 </style>
 </head>
 
 <body>
 
-<div class="background-text">
-  TERMUX MD<br>
-  KAS UNIVERSE<br>
-  MAÎTRE DU CYBER
-</div>
-
 <div class="container">
   <div class="card">
     <h1>⚽ KAS UNIVERSE PREDICTOR</h1>
-    <p class="subtitle">Assistant intelligent de paris sportifs</p>
+    <p class="subtitle">IA d’analyse des options les plus favorables</p>
 
-    <input id="match" placeholder="Ex: man u vs chelsea">
-    <button onclick="predict()">🔮 Analyser le match</button>
+    <input id="match" placeholder="Ex: Real Madrid vs Barcelona">
+    <button id="btn" onclick="predict()">🔮 Analyser le match</button>
 
     <div id="output" class="result"></div>
   </div>
-</div>
 
-<div class="footer">
-  <a href="https://wa.me/243994158410" target="_blank">💬 Créateur</a>
-  <a href="https://chat.whatsapp.com/LFH4eyfVymkJriNFUwas4o" target="_blank">🟢 Groupe</a>
+  <div class="footer">
+    © KAS UNIVERSE • Analyse IA • Paris responsables
+  </div>
 </div>
 
 <script>
 async function predict(){
   const match=document.getElementById("match").value.trim();
   const output=document.getElementById("output");
-  if(!match){
-    output.innerHTML="❌ Entrez un match";
+  const btn=document.getElementById("btn");
+
+  if(match.length<5){
+    output.innerHTML="❌ Match invalide";
     return;
   }
 
-  output.innerHTML="⏳ Analyse intelligente en cours...";
+  btn.disabled=true;
+  output.innerHTML=`
+    <div class="loader">
+      <div class="spinner"></div>
+      <p>Analyse intelligente en cours...</p>
+    </div>
+  `;
 
   try{
-    const res=await fetch("/api/predict",{
+    const res=await fetch("/api",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({match})
     });
 
     const data=await res.json();
-
-    if(!data.success){
-      output.innerHTML="❌ "+(data.error||"Analyse impossible");
-      return;
-    }
+    if(!data.success) throw new Error();
 
     const p=data.prediction;
 
-    const certClass =
-      p.niveau_certitude==="élevé" ? "cert-high" :
-      p.niveau_certitude==="moyen" ? "cert-mid" : "cert-low";
+    let optionsHTML="";
+    p.options_favorables.forEach(o=>{
+      optionsHTML+=`
+        <div class="badge">
+          <strong>${o.option}</strong> – ${o.probabilite}<br>
+          <small>${o.raison}</small>
+        </div>
+      `;
+    });
 
     output.innerHTML=`
-      <h3>📌 Match détecté</h3>
-      <p><strong>${p.match_corrige}</strong></p>
-      <p class="${certClass}">Certitude : ${p.niveau_certitude}</p>
+      <div class="section">
+        <h3>📌 Match</h3>
+        <p><strong>${p.match_corrige}</strong></p>
+        <p style="opacity:.8">${p.analyse_globale}</p>
+      </div>
 
-      <div class="badge">V1 : ${p.V1}</div>
-      <div class="badge">X : ${p.X}</div>
-      <div class="badge">V2 : ${p.V2}</div>
-      <div class="badge">Over 2.5 : ${p.over25}</div>
-      <div class="badge">BTTS Oui : ${p.btts_oui}</div>
-      <div class="badge">BTTS Non : ${p.btts_non}</div>
-      <div class="badge">Corners : ${p.corners}</div>
+      <div class="section">
+        <h3>✅ Options favorables</h3>
+        ${optionsHTML}
+      </div>
 
-      <h3>🎯 Scores probables</h3>
-      <p>${p.scores_probables.join(" • ")}</p>
+      <div class="section">
+        <h3 class="safe">💎 Pari le plus sûr</h3>
+        <p><strong>${p.pari_le_plus_sur.selection}</strong> – ${p.pari_le_plus_sur.confiance}</p>
+      </div>
 
-      <h3>💎 Pari VIP (sécurisé)</h3>
-      <p><strong>${p.vip_pari.selection}</strong></p>
-      <p style="opacity:.8">${p.vip_pari.raison}</p>
+      <div class="section">
+        <h3 class="mid">⚖️ Pari équilibré</h3>
+        <p><strong>${p.pari_equilibre.selection}</strong> – ${p.pari_equilibre.confiance}</p>
+      </div>
 
-      <hr>
+      <div class="section">
+        <h3 class="risk">🔥 Pari risqué</h3>
+        <p><strong>${p.pari_risque.selection}</strong> – ${p.pari_risque.confiance}</p>
+      </div>
 
-      <p style="font-size:14px;opacity:.8">
-        ⚠️ ${p.conseil}
-      </p>
+      <div class="section">
+        <p style="font-size:14px;opacity:.8">⚠️ ${p.conseil_final}</p>
+      </div>
     `;
-  }catch(e){
-    output.innerHTML="❌ Erreur serveur";
+  }catch{
+    output.innerHTML="❌ Erreur serveur ou IA indisponible";
+  }finally{
+    btn.disabled=false;
   }
 }
 </script>
