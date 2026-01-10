@@ -3,92 +3,309 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TERMUX-MD ⚡ KAS UNIVERSE</title>
+<title>KAS UNIVERSE ⚡ Predictor</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI", Roboto, sans-serif;
+}
+
 body{
-  min-height:100vh;color:#fff;
-  background:radial-gradient(circle at 20% 20%,#9b00ff,transparent 40%),
-             radial-gradient(circle at 80% 30%,#00b3ff,transparent 40%),
-             linear-gradient(135deg,#05050a,#0b0b18);
+  min-height:100vh;
+  color:#fff;
+  background:
+    radial-gradient(circle at 15% 20%, #9b00ff, transparent 40%),
+    radial-gradient(circle at 85% 30%, #00b3ff, transparent 40%),
+    radial-gradient(circle at 50% 85%, #00ffd5, transparent 45%),
+    linear-gradient(135deg,#05050a,#0b0b18);
+  background-attachment: fixed;
+  animation:hue 14s infinite alternate;
 }
-.container{max-width:900px;margin:auto;padding:40px 20px}
+
+@keyframes hue{
+  0%{filter:hue-rotate(0deg)}
+  100%{filter:hue-rotate(360deg)}
+}
+
+.background-text{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:9vw;
+  font-weight:900;
+  opacity:0.06;
+  pointer-events:none;
+  animation:float 6s infinite ease-in-out;
+  text-shadow:0 0 30px #9b00ff,0 0 60px #00b3ff;
+  z-index: -1;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-25px)}
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:40px 20px;
+}
+
 .card{
-  background:rgba(10,10,25,.7);
-  backdrop-filter:blur(18px);
-  border-radius:26px;
+  background:rgba(10,10,25,.75);
+  backdrop-filter:blur(20px);
+  border-radius:28px;
   padding:30px;
-  box-shadow:0 0 40px rgba(155,0,255,.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow:
+    0 0 40px rgba(155,0,255,.3),
+    0 0 90px rgba(0,179,255,.2);
 }
-h1{text-align:center;margin-bottom:10px}
-.subtitle{text-align:center;opacity:.8;margin-bottom:25px}
+
+h1{
+  text-align:center;
+  margin-bottom:8px;
+  font-size:2.2em;
+  background: linear-gradient(to right, #00ffd5, #9b00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle{
+  text-align:center;
+  opacity:.8;
+  margin-bottom:30px;
+  font-size: 0.9em;
+}
+
 input,button{
-  width:100%;padding:15px;border-radius:14px;
-  border:none;margin-top:15px;font-size:1em
+  width:100%;
+  padding:16px;
+  border-radius:16px;
+  border:none;
+  margin-top:15px;
+  font-size:1em;
+  outline: none;
 }
-input{background:#111;color:#fff}
-button{
-  background:linear-gradient(135deg,#00ffd5,#9b00ff);
-  font-weight:800;cursor:pointer
+
+input{
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+  border: 1px solid #333;
+  transition: 0.3s;
 }
-.result{margin-top:30px}
-.badge{
-  display:block;
-  background:rgba(255,255,255,.12);
-  padding:12px;border-radius:14px;
-  margin:10px 0
+
+input:focus{
+  border-color: #00ffd5;
+  box-shadow: 0 0 15px rgba(0,255,213,0.3);
 }
-.creator{
-  margin-top:25px;
-  text-align:center
-}
-.creator a{
-  display:inline-block;
-  padding:14px 22px;
-  border-radius:20px;
-  background:#00ffd5;
+
+button#btn{
+  background:linear-gradient(135deg,#00ffd5,#9b00ff,#ff2aa1);
   color:#000;
   font-weight:900;
-  text-decoration:none
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor:pointer;
+  box-shadow:0 0 25px rgba(0,255,213,.5);
+  transition:.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+button#btn:hover{
+  transform:scale(1.03);
+  box-shadow:0 0 40px rgba(255,42,161,.7);
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform: scale(1) !important;
+}
+
+.result{
+  margin-top:30px;
+  animation:fade .5s ease-out;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Styles des Badges Améliorés */
+.badge {
+  padding: 15px;
+  border-radius: 18px;
+  margin: 12px 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 5px solid transparent;
+  transition: 0.3s;
+}
+
+.pari-sur { border-left-color: #00ffd5; background: rgba(0, 255, 213, 0.1); }
+.pari-equilibre { border-left-color: #ffd700; background: rgba(255, 215, 0, 0.1); }
+.pari-risque { border-left-color: #ff4d4d; background: rgba(255, 77, 77, 0.1); }
+
+.label-type {
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+hr{
+  border:none;
+  height:1px;
+  background:linear-gradient(to right,transparent,#00ffd5,transparent);
+  margin:25px 0;
+}
+
+.share-btn {
+  background: #25d366;
+  color: white;
+  padding: 10px;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.footer{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  font-size:13px;
+  opacity:.85;
+}
+
+.footer a{
+  color:#00ffd5;
+  text-decoration:none;
+}
+
+@media(max-width:600px){
+  h1{font-size:1.6em}
+  .background-text{font-size:13vw}
 }
 </style>
 </head>
 
 <body>
 
+<div class="background-text">
+  TERMUX MD<br>
+  KAS UNIVERSE<br>
+  MAÎTRE DU CYBER
+</div>
+
 <div class="container">
   <div class="card">
-    <h1>⚽ TERMUX-MD PREDICTOR</h1>
-    <p class="subtitle">Options favorables • IA professionnelle</p>
+    <h1>⚽ KAS UNIVERSE</h1>
+    <p class="subtitle">Analyseur de Match par Intelligence Artificielle</p>
 
-    <input id="match" placeholder="Ex: man u vs chelsea">
-    <button onclick="predict()">🔮 Analyser</button>
+    <input id="match" placeholder="Ex: Real Madrid vs Barcelone">
+    <button id="btn" onclick="predict()">🔮 Lancer l'Analyse</button>
 
     <div id="output" class="result"></div>
+  </div>
 
-    <div class="creator">
-      <a href="https://wa.me/243994158410" target="_blank">
-        💬 Contacter le Créateur
-      </a>
-    </div>
+  <div class="footer">
+    <a href="https://wa.me/243994158410" target="_blank">💬 Créateur</a>
+    <a href="https://chat.whatsapp.com/LFH4eyfVymkJriNFUwas4o" target="_blank">🟢 Groupe</a>
   </div>
 </div>
 
 <script>
 async function predict(){
-  const match=document.getElementById("match").value.trim();
-  const output=document.getElementById("output");
+  const matchInput = document.getElementById("match");
+  const match = matchInput.value.trim();
+  const output = document.getElementById("output");
+  const btn = document.getElementById("btn");
 
   if(!match){
-    output.innerHTML="❌ Entrez un match";
+    output.innerHTML="<p style='color:#ff4d4d; text-align:center;'>❌ Veuillez entrer un match</p>";
     return;
   }
 
-  output.innerHTML="⏳ Analyse en cours...";
+  btn.disabled = true;
+  output.innerHTML = `
+    <div style="text-align:center; padding: 20px;">
+      <div class="loading-pulse">⏳ L'IA analyse les statistiques de ${match}...</div>
+    </div>
+  `;
 
-  try{
-    const res=await fetch("/api/predict",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
+  try {
+    const res = await fetch("/api/predict", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({match})
+    });
+
+    const data = await res.json();
+
+    if(!data.success){
+      output.innerHTML = "❌ " + (data.error || "Analyse impossible actuellement");
+      btn.disabled = false;
+      return;
+    }
+
+    const p = data.prediction;
+
+    // Construction du message WhatsApp pour le partage
+    const shareText = encodeURIComponent(`⚡ *PRONOSTIC KAS UNIVERSE* ⚡\n⚽ Match: ${p.match_corrige}\n💎 Sûr: ${p.pari_le_plus_sur.selection}\n📊 Confiance: ${p.pari_le_plus_sur.confiance}`);
+
+    output.innerHTML = `
+      <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-bottom: 20px;">
+        <h3 style="color:#00ffd5; margin-bottom: 5px;">📌 ${p.match_corrige}</h3>
+        <p style="font-size: 14px; line-height: 1.4;">${p.analyse_globale}</p>
+      </div>
+
+      <div class="badge pari-sur">
+        <span class="label-type">💎 Pari le plus sûr</span>
+        <strong>${p.pari_le_plus_sur.selection}</strong>
+        <div style="font-size: 12px; margin-top:5px; color: #00ffd5;">Probabilité estimée: ${p.pari_le_plus_sur.confiance}</div>
+      </div>
+
+      <div class="badge pari-equilibre">
+        <span class="label-type">⚖️ Pari Équilibré</span>
+        <strong>${p.pari_equilibre.selection}</strong>
+      </div>
+
+      <div class="badge pari-risque">
+        <span class="label-type">⚠️ Pari à grosse cote</span>
+        <strong>${p.pari_plus_risque.selection}</strong>
+      </div>
+
+      <a href="https://wa.me/?text=${shareText}" class="share-btn">
+         📤 Partager ce pronostic
+      </a>
+
+      <hr>
+      <p style="opacity:.7; font-size:12px; text-align:center;">
+        ⚠️ <strong>Conseil :</strong> ${p.conseil_final}
+      </p>
+    `;
+
+  } catch(e) {
+    output.innerHTML = "❌ Erreur de connexion au serveur";
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>
