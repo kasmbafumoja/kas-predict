@@ -22,24 +22,22 @@ export default async function handler(req, res) {
       });
     }
 
-    // PROMPT EXPERT – OPTIONS FAVORABLES UNIQUEMENT
     const prompt = `
 Tu es un EXPERT MONDIAL en analyse de paris sportifs football.
 
-Analyse le match suivant (même mal écrit) :
+Analyse le match (même mal écrit) :
 "${match}"
 
 RÈGLES STRICTES :
-- Corrige les noms d’équipes si nécessaire
+- Corrige les noms d’équipes
 - N’invente JAMAIS de clubs
-- Analyse TOUS les événements possibles du match
-- Sélectionne UNIQUEMENT les OPTIONS LES PLUS PROBABLES
-- IGNORE totalement les options faibles ou incertaines
-- Ne donne PAS directement V1 / X / V2
-- Privilégie : buts, BTTS, over/under, double chance, mi-temps, corners, sécurité
+- Analyse TOUS les événements possibles
+- Donne UNIQUEMENT les options LES PLUS PROBABLES
+- Ignore totalement V1 / X / V2
+- Privilégie : buts, BTTS, over/under, double chance, mi-temps, corners
 - Raisonne comme un tipster professionnel
 
-RETOURNE STRICTEMENT ce JSON valide (sans texte autour) :
+RETOURNE STRICTEMENT ce JSON valide :
 
 {
   "match_corrige": "",
@@ -72,14 +70,8 @@ RETOURNE STRICTEMENT ce JSON valide (sans texte autour) :
       model: "gpt-4o-mini",
       temperature: 0.35,
       messages: [
-        {
-          role: "system",
-          content: "Tu es une IA experte en paris sportifs football."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
+        { role: "system", content: "Tu es une IA experte en paris sportifs football." },
+        { role: "user", content: prompt }
       ]
     });
 
@@ -88,8 +80,7 @@ RETOURNE STRICTEMENT ce JSON valide (sans texte autour) :
     let prediction;
     try {
       prediction = JSON.parse(raw);
-    } catch (e) {
-      console.error("JSON invalide :", raw);
+    } catch {
       return res.json({
         success: false,
         error: "Réponse IA invalide"
@@ -98,12 +89,11 @@ RETOURNE STRICTEMENT ce JSON valide (sans texte autour) :
 
     return res.status(200).json({
       success: true,
-      original: match,
       prediction
     });
 
   } catch (err) {
-    console.error("Erreur serveur :", err);
+    console.error(err);
     return res.status(500).json({
       success: false,
       error: "Erreur serveur"
