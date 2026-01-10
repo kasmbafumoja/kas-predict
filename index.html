@@ -133,12 +133,28 @@ button:disabled{
   animation:fade .5s ease-out;
 }
 
+/* Loader pro */
+.loader {
+  width: 60px;
+  height: 60px;
+  margin: 40px auto;
+  border: 6px solid rgba(255,255,255,0.1);
+  border-top: 6px solid #00ffd5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
 @keyframes fade{
   from{opacity:0;transform:translateY(20px)}
   to{opacity:1;transform:translateY(0)}
 }
 
-/* Styles des Badges Améliorés */
+/* Styles des Badges pour les types de pari */
 .badge {
   padding: 15px;
   border-radius: 18px;
@@ -241,11 +257,9 @@ async function predict(){
   }
 
   btn.disabled = true;
-  output.innerHTML = `
-    <div style="text-align:center; padding: 20px;">
-      ⏳ L'IA analyse les statistiques de ${match}...
-    </div>
-  `;
+
+  // Loader pro
+  output.innerHTML = `<div class="loader"></div>`;
 
   try {
     const res = await fetch("/api/predict", {
@@ -264,44 +278,38 @@ async function predict(){
 
     const p = data.prediction;
 
-    let optionsHTML = "";
-    if(p.options_favorables && p.options_favorables.length){
-      p.options_favorables.forEach(o=>{
-        optionsHTML+=`
-          <div class="badge">
-            <span class="label-type">Option Favorable</span>
-            <strong>${o.option}</strong><br>
-            Probabilité: ${o.probabilite}<br>
-            <small>${o.raison}</small>
-          </div>
-        `;
-      });
-    }
-
     const shareText = encodeURIComponent(`⚡ *PRONOSTIC KAS UNIVERSE* ⚡\n⚽ Match: ${p.match_corrige}\n💎 Sûr: ${p.pari_le_plus_sur.selection}\n📊 Confiance: ${p.pari_le_plus_sur.confiance}`);
 
     output.innerHTML = `
       <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-bottom: 20px;">
-        <h3 style="color:#00ffd5;">📌 ${p.match_corrige}</h3>
-        <p style="font-size: 14px;">${p.analyse_globale}</p>
+        <h3 style="color:#00ffd5; margin-bottom: 5px;">📌 ${p.match_corrige}</h3>
+        <p style="font-size: 14px; line-height: 1.4;">${p.analyse_globale}</p>
       </div>
 
-      ${optionsHTML}
+      <h4>🎯 Événements du match</h4>
+      ${Object.entries(p.events).map(([key, value])=>`
+        <div class="badge">
+          <span class="label-type">${key.replace(/_/g,' ').toUpperCase()}</span>
+          <strong>${value.option}</strong> - <span style="color:#00ffd5;">${value.probabilite}</span>
+        </div>
+      `).join('')}
 
       <div class="badge pari-sur">
         <span class="label-type">💎 Pari le plus sûr</span>
         <strong>${p.pari_le_plus_sur.selection}</strong>
-        <div style="font-size:12px; color:#00ffd5;">Confiance: ${p.pari_le_plus_sur.confiance}</div>
+        <div style="font-size: 12px; margin-top:5px; color: #00ffd5;">Probabilité: ${p.pari_le_plus_sur.confiance}</div>
       </div>
 
       <div class="badge pari-equilibre">
-        <span class="label-type">⚖️ Pari équilibré</span>
+        <span class="label-type">⚖️ Pari Équilibré</span>
         <strong>${p.pari_equilibre.selection}</strong>
+        <div style="font-size: 12px; margin-top:5px; color: #ffd700;">Probabilité: ${p.pari_equilibre.confiance}</div>
       </div>
 
       <div class="badge pari-risque">
-        <span class="label-type">⚠️ Pari à risque</span>
+        <span class="label-type">⚠️ Pari Risqué</span>
         <strong>${p.pari_plus_risque.selection}</strong>
+        <div style="font-size: 12px; margin-top:5px; color: #ff4d4d;">Probabilité: ${p.pari_plus_risque.confiance}</div>
       </div>
 
       <a href="https://wa.me/?text=${shareText}" class="share-btn">
